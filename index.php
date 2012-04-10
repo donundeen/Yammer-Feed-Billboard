@@ -351,6 +351,8 @@ require_once(dirname(__FILE__)."/secrets.php");
 <div id="main_div">
  <div class='clickhere'><b><u>Click Here to Start</u></b></div><BR>
 Welcome to the Yammer Feed Billboard:<BR>
+To post a messge to this Dashboard, include the hashtag #dashboard in your post. <BR>
+URLs will load in Popup windows in the largest availalbe screen space.<BR>
 
 <B>Note: This works best in Chrome</b><BR>
 Make this window a skinny one, down the left side of the screen,<BR>
