@@ -5,12 +5,12 @@ padding: 3px;
 }
 
 div .single_message{
-	min-height: 50px;
+	min-height: 68px;
 
 }
 
 div .message_contents{
-	margin-left: 50px;
+	margin-left: 68px;
 	/*border: 1px solid black; */
 }
 

@@ -4,6 +4,8 @@
 // $consumer_key = 'SecretAPIKeyHere';
 // when you start the app, you'll be prompted to log in to your yammer account, using OAuth.
 // all behaviour will be based on the user you are logged in as
+// This seems to work best in Chrome
+
 require_once(dirname(__FILE__)."/secrets.php");
 ?>
 <html>
@@ -13,13 +15,19 @@ require_once(dirname(__FILE__)."/secrets.php");
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>
   
+	// SETTINGS HERE!
+  	var timeout_ms = 120000
+	var messageLimit = 10;  
+	var searchHashtag = "#dashboard"
+	// END SETTINGS!!
+	
+	
 	var popX;
 	var popY;
 	var popW;
 	var popH;
 	var inRequest = false;
-	var timeout_ms = 20000
-	var messageLimit = 10;
+
 		
 	var userData = {};	
 	var link_window = null;
@@ -34,7 +42,7 @@ require_once(dirname(__FILE__)."/secrets.php");
 	// browser outer width
 	$("#main_div").append("<br>browser : " + window.outerWidth + " , " + window.outerHeight + " : position: " + window.screenX + " , " + window.screenY );
 	
-	$("#clickhere").click(function(){
+	$(".clickhere").click(function(){
 		//alert("clicked");
 	
 		// get screen size, and this windows size and position.
@@ -127,58 +135,38 @@ require_once(dirname(__FILE__)."/secrets.php");
 	var data = "search="+escape('#dashboard');
 	yam.request(
 		  { 
-/*
+
+		  /*
+		  // in case you wanted to try a different method for accessing messages:
 		  url: "/api/v1/messages/following"
 		  , data: "limit=5&threaded=true"
-*/
-		
-		
+		*/
 		  url: "/api/v1/search"
-		  , data: "search="+escape('#dashboard')
+		  , data: "search="+escape(searchHashtag)
 		  , method: "GET"
 		  , success: function (msgs) { 
 			var string = "";			
 			var length = msgs.messages.messages.length;
-			//alert("len " + length);
 			var i= 0;
 			doMessages(msgs, length, i);
 			inRequest = false;
-//			alert("string " + string);
 		  }
 		  , error: function (msg) { alert("Data Not Saved: " + msg); }
 		  }
 	); 
-	//setTimeout("doRequest()", 5000);
   }
   
 
 	function doMessages(msgs, length, i){
 		var msg = msgs.messages.messages[i];
-		
-		/*
-		var text = msg.body.rich;
-		$("#main_div").html(text);
-		$("#main_div").html(text);
-		*/
 		var num_attach = 0;
 		// links might be in a few different places in the returned json.
 		// one place is the message attachments
 		$(msg.attachments).each(function (key2, attachment){
-			//string += " \nattachment: " + attachment.type ;
-			//string += " \nweb_url : " + attachment.web_url ;
 			if(link_window == null){
-			//	alert("opening new " + attachment.web_url);
-			//	$("#frame").attr("src",attachment.web_url);
 				var dims = "width="+popW+",height="+popH+",top="+popY+",left="+popX;
 				link_window = window.open(attachment.web_url, "_blank", dims);
-				if(link_window.moveTo){
-				//	link_window.moveTo(popX, popY);
-				}else{
-			//		alert("no moveTo");
-				}
 			}else{
-			//	$("#frame").attr("src",attachment.web_url);
-			//	alert("opening " + attachment.web_url);
 				link_window.location = attachment.web_url;
 			}
 			num_attach++;
@@ -188,19 +176,10 @@ require_once(dirname(__FILE__)."/secrets.php");
 		if(num_attach == 0){
 			// look in the msg.body.urls array
 			$(msg.body.urls).each(function (key2, web_url){
-				//string += " \nattachment: " + attachment.type ;
-				//string += " \nweb_url : " + attachment.web_url ;
 				if(link_window == null){
-				//	alert("opening new " + attachment.web_url);
-				//	$("#frame").attr("src",attachment.web_url);
 					var dims = "width="+popW+",height="+popH+",top="+popY+",left="+popX;
 					link_window = window.open(web_url, "_blank", dims);
-					if(link_window.moveTo){
-						link_window.moveTo(popX, popY);
-					}
 				}else{
-				//	$("#frame").attr("src",attachment.web_url);
-					//alert("opening " + attachment.web_url);
 					link_window.location = web_url;
 				}
 				num_attach++;
@@ -220,18 +199,17 @@ require_once(dirname(__FILE__)."/secrets.php");
 		yam.request(
 			  { url: "/api/v1/messages/in_thread/"+thread_id
 			  , method: "GET"
-			  , data: "limit=5"
+			  , data: "limit=10"
 			  , success: function (threads) { 
 				var string = "";			
 				var threadlen = threads.messages.length;
 				var j= 0;
 				doThreads(thread_id, threads, threadlen, j);
-	//			alert("string " + string);
 			  }
 			  , error: function (msg) {
 			  alert("thread Data Not Saved: " + msg); 
 			  }
-			  }
+			}
 		);		
 		
 
@@ -246,7 +224,7 @@ require_once(dirname(__FILE__)."/secrets.php");
 	}
   
 	function doThreads(root_id, threads, length, j){
-		// assemble array of thread info.
+		// assemble array of thread info, so we can track child(response) messages
 		var threadArray = {};
 		var k=0;
 		$(threads.messages).each(function(key, message){
@@ -264,9 +242,10 @@ require_once(dirname(__FILE__)."/secrets.php");
 		
 		var threadText = buildThreadText(threadArray, root_id, 1);
 		$("#main_div").html(threadText);
-		//alert("len " + length);
 	}
 	
+	
+	// this is a recursive function for building the nested messages
 	function buildThreadText(threadArray, id, depth){
 		var thisMessage = threadArray[id];
 		var prepend = "";//Array(depth + 1).join("-");
@@ -300,6 +279,9 @@ require_once(dirname(__FILE__)."/secrets.php");
 		return string + "</div>\n";	
 	}
   
+  
+  
+	// the messages just store the user ID; we need a separate call to get the user's name, image, etc
 	function getUserData(user_id, div_class){
 		var user;
 		if(userData[user_id]){
@@ -333,7 +315,7 @@ require_once(dirname(__FILE__)."/secrets.php");
 	
 	function formatUserImage(user){
 		var string = "";
-		string += "<img class='user_image' src='"+user.mugshot_url+"' />";
+		string += "<img class='user_image' src='"+user.mugshot_url+"' width='64' />";
 		return string;	
 	}
 	
@@ -366,12 +348,22 @@ require_once(dirname(__FILE__)."/secrets.php");
 </script>
 </head>
 <body>
-<div id="main_div">make this window a skinny one, down the left side of the screen, on your primary monitor (if you have multiple).<BR>Then <div id='clickhere'><b><u>click here to start</u></b></div></div>
-<!--
-<div id="framediv" style="position:absolute; left:77; top:77; width:377; height:377; clip:rect(0,381,381,0); background:#FFF;">
-<iframe id="frame"  width="377" height="377" marginwidth="0" marginheight="0" frameborder="no" scrolling="yes" style="border-width:2px; border-color:#333; background:#FFF; border-style:solid;"></iframe>
-</div>
--->
+<div id="main_div">
+ <div class='clickhere'><b><u>Click Here to Start</u></b></div><BR>
+Welcome to the Yammer Feed Billboard:<BR>
+
+<B>Note: This works best in Chrome</b><BR>
+Make this window a skinny one, down the left side of the screen,<BR>
+ on your primary monitor (if you have multiple).<BR><BR>
+ Then: <BR>
+ <div class='clickhere'><b><u>Click Here to Start</u></b></div>
+
+ <BR>
+ Source Code at:<BR>
+<a href="https://github.com/donundeen/Yammer-Feed-Billboard">https://github.com/donundeen/Yammer-Feed-Billboard</a>
+<BR>
+<BR>
+ </div>
 </body>
 </html>
 
