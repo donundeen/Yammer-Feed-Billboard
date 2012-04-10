@@ -1,4 +1,9 @@
 <?php
+//git@github.com:donundeen/Yammer-Feed-Billboard.git
+// the secrets.php file just needs to define one variable, the API key you can get from Yammer:
+// $consumer_key = 'SecretAPIKeyHere';
+// when you start the app, you'll be prompted to log in to your yammer account, using OAuth.
+// all behaviour will be based on the user you are logged in as
 require_once(dirname(__FILE__)."/secrets.php");
 ?>
 <html>
