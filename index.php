@@ -28,7 +28,7 @@ require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one v
 	var popW;
 	var popH;
 	var inRequest = false;
-
+	var started  = false;
 		
 	var userData = {};	
 	var link_window = null;
@@ -45,7 +45,10 @@ require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one v
 	
 	$(".clickhere").click(function(){
 		//alert("clicked");
-	
+		if(started){
+			return;
+		}
+		started = true;
 		// get screen size, and this windows size and position.
 		// then we'll calculate where the popup goes
 		// screen : screen.width , screen.height
@@ -348,22 +351,22 @@ require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one v
   
 </script>
 </head>
-<body>
-<div id="main_div">
- <div class='clickhere'><b><u>Click Here to Start</u></b></div><BR>
-Welcome to the Yammer Feed Dashboard:<BR>
-To post a message to this Dashboard Screen, include the hashtag #dashboard in your post. <BR>
+<body class='clickhere'>
+<div id="main_div" >
+ <div><b><u>Click Anywhere to Start</u></b></div><BR>
+Welcome to the Yammer Feed Dashboard!<BR><BR>
+To post a message to this Dashboard Screen, include the hashtag <B>#dashboard</b> in your post. <BR>
 URLs will load in Popup windows in the largest available screen space.<BR>
-
-<B>Note: This works best in Chrome</b><BR>
+<BR>
+<B>Note: This works best in Chrome</b><BR><BR>
 Make this window a skinny one, down the left side of the screen,<BR>
  on your primary monitor (if you have multiple).<BR><BR>
  Then: <BR>
- <div class='clickhere'><b><u>Click Here to Start</u></b></div>
+ <div ><b><u>Click Anywhere to Start</u></b></div>
 
  <BR>
  Source Code at:<BR>
-<a href="https://github.com/donundeen/Yammer-Feed-Billboard">https://github.com/donundeen/Yammer-Feed-Billboard</a>
+<B>https://github.com/donundeen/Yammer-Feed-Billboard</b>
 <BR>
 <BR>
  </div>
