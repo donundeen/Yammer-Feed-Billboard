@@ -6,7 +6,7 @@
 // all behaviour will be based on the user you are logged in as
 // This seems to work best in Chrome
 
-require_once(dirname(__FILE__)."/secrets.php");
+require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one variable, used a few lines below. You could hard-code it, and not use any php.
 ?>
 <html>
 <head>
@@ -19,6 +19,7 @@ require_once(dirname(__FILE__)."/secrets.php");
   	var timeout_ms = 120000
 	var messageLimit = 10;  
 	var searchHashtag = "#dashboard"
+	var consumerKey = "<?php echo $consumer_key;?>"; // this is the only use of PHP in this app, you could hard-code the key if you wanted.
 	// END SETTINGS!!
 	
 	
@@ -33,7 +34,7 @@ require_once(dirname(__FILE__)."/secrets.php");
 	var link_window = null;
 	var thisPageData = {};
   $(document).ready(function(){
-	yam.config({appId: "<?php echo $consumer_key;?>"});
+	yam.config({appId: consumerKey});
 	
 
 	$("#main_div").append("<BR>screen size : " + screen.width + " ,  " + screen.height);
@@ -132,7 +133,7 @@ require_once(dirname(__FILE__)."/secrets.php");
 
   function doRequest(){
 	inRequest = true;
-	var data = "search="+escape('#dashboard');
+	var data = "search="+escape(searchHashtag);
 	yam.request(
 		  { 
 
@@ -350,9 +351,9 @@ require_once(dirname(__FILE__)."/secrets.php");
 <body>
 <div id="main_div">
  <div class='clickhere'><b><u>Click Here to Start</u></b></div><BR>
-Welcome to the Yammer Feed Billboard:<BR>
-To post a messge to this Dashboard, include the hashtag #dashboard in your post. <BR>
-URLs will load in Popup windows in the largest availalbe screen space.<BR>
+Welcome to the Yammer Feed Dashboard:<BR>
+To post a message to this Dashboard Screen, include the hashtag #dashboard in your post. <BR>
+URLs will load in Popup windows in the largest available screen space.<BR>
 
 <B>Note: This works best in Chrome</b><BR>
 Make this window a skinny one, down the left side of the screen,<BR>

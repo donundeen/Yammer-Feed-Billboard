@@ -1,3 +1,9 @@
+
+body {
+	background: beige;
+}
+
+
 div .message_and_children {
 background: lightblue;
 border: 1px solid black;
