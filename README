@@ -1,2 +1,6 @@
 this is the README file for the YammerFeed public dashboard thingee.
+<<<<<<< HEAD
 you'll need to create a secrets.js file, with your API key.
+=======
+you'll need to create a secrets.js file, with your API key..
+>>>>>>> a9a3456467921c27eb67837a0eebc258f5c3c31e
