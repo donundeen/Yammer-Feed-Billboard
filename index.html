@@ -1,4 +1,6 @@
-<?php
+<html>
+<head>
+<!--
 //git@github.com:donundeen/Yammer-Feed-Billboard.git
 // the secrets.php file just needs to define one variable, the API key you can get from Yammer:
 // $consumer_key = 'SecretAPIKeyHere';
@@ -6,11 +8,10 @@
 // all behaviour will be based on the user you are logged in as
 // This seems to work best in Chrome
 
-require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one variable, used a few lines below. You could hard-code it, and not use any php.
-?>
-<html>
-<head>
+-->
+
 <link rel="stylesheet" type="text/css" href="css/style.css" />
+<script src="secrets.js"></script>
 <script src="https://assets.yammer.com/platform/yam.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>
@@ -19,7 +20,7 @@ require_once(dirname(__FILE__)."/secrets.php"); // this is only to pull in one v
   	var timeout_ms = 120000
 	var messageLimit = 10;  
 	var searchHashtag = "#dashboard"
-	var consumerKey = "<?php echo $consumer_key;?>"; // this is the only use of PHP in this app, you could hard-code the key if you wanted.
+	var consumerKey = _secret_consumer_key; // this is the only use of PHP in this app, you could hard-code the key if you wanted.
 	// END SETTINGS!!
 	
 	
