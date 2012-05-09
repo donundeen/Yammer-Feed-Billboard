@@ -3,3 +3,5 @@ you'll need to create a secrets.js file, with your API key.
 
 just one line that says: 
 var _secret_consumer_key = 'YourSecretKeyHere';
+
+see the secrets.example.js file for the right format.
