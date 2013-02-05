@@ -15,6 +15,14 @@
 <script src="https://assets.yammer.com/platform/yam.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script>
+
+	function getUrlVars() {
+	    var vars = {};
+	    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+	        vars[key] = value;
+	    });
+	    return vars;
+	}
   
 	// SETTINGS HERE!
   	var timeout_ms = 120000
@@ -36,7 +44,8 @@
 	var thisPageData = {};
   $(document).ready(function(){
 	yam.config({appId: consumerKey});
-	
+
+   var autostart = getUrlVars()['autostart'];	
 
 	$("#main_div").append("<BR>screen size : " + screen.width + " ,  " + screen.height);
 	
@@ -44,7 +53,18 @@
 	// browser outer width
 	$("#main_div").append("<br>browser : " + window.outerWidth + " , " + window.outerHeight + " : position: " + window.screenX + " , " + window.screenY );
 	
-	$(".clickhere").click(function(){
+
+	$(".clickhere").click(startyammerfeed);
+
+	if(autostart=='true'){
+		setTimeout(startyammerfeed, 3000);
+	}	
+  
+  });
+  
+
+  function startyammerfeed(){
+
 		//alert("clicked");
 		if(started){
 			return;
@@ -110,7 +130,7 @@
 			// logged in and connected user, someone you know?  
 		  } else { 
 			//alert("logged in");
-			// no user session available, someone you don’t know
+			// no user session available, someone you don?t know
 		  }  
 		});		
 	
@@ -127,13 +147,8 @@
 		doRequest();
 
 	//		sleep(30000);
-		
-		
-	});
-	
-  
-  });
-  
+
+  }
 
   function doRequest(){
 	inRequest = true;
