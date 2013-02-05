@@ -29,7 +29,8 @@ call with index.html?autostart=true, to make the feed start automatically.
 	// SETTINGS HERE!
   	var timeout_ms = 120000
 	var messageLimit = 10;  
-	var searchHashtag = "#dashboard"
+	var searchHashtag = "#dashboard";
+//	var searchHashtag = "#a";
 	var consumerKey = _secret_consumer_key; // this is the only use of PHP in this app, you could hard-code the key if you wanted.
 	// END SETTINGS!!
 	
@@ -158,29 +159,33 @@ call with index.html?autostart=true, to make the feed start automatically.
 	yam.request(
 		  { 
 
-		  /*
+		  
 		  // in case you wanted to try a different method for accessing messages:
-		  url: "/api/v1/messages/following"
-		  , data: "limit=5&threaded=true"
-		*/
-		  url: "/api/v1/search"
-		  , data: "search="+escape(searchHashtag)
+		  url: "/api/v1/messages.json"
+		  , data: "limit=10&threaded=true"
+		
+		
+		//  url: "/api/v1/search"
+		 // , data: "search="+escape(searchHashtag)
+		  
 		  , method: "GET"
 		  , success: function (msgs) { 
+		//  	console.log(msgs);
 			var string = "";			
-			var length = msgs.messages.messages.length;
+			var length = msgs.messages.length;
 			var i= 0;
 			doMessages(msgs, length, i);
 			inRequest = false;
 		  }
 		  , error: function (msg) { alert("Data Not Saved: " + msg); }
 		  }
+
 	); 
   }
   
 
 	function doMessages(msgs, length, i){
-		var msg = msgs.messages.messages[i];
+		var msg = msgs.messages[i];
 		var num_attach = 0;
 		// links might be in a few different places in the returned json.
 		// one place is the message attachments
